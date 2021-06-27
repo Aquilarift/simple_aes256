@@ -33,6 +33,7 @@ Makefile*
 *.prl
 *.ui 
 *.pyproject
+*.pyproject.*
 
 # Qt unit tests
 target_wrapper.*
