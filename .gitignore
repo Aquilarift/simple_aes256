@@ -57,5 +57,5 @@ compile_commands.json
 *.ico
 
 #Python
-__pycache__
-.qt_for_python
+/__pycache__/
+/.qt_for_python/
