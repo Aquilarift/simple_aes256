@@ -60,3 +60,4 @@ compile_commands.json
 #Python
 /__pycache__
 /.qt_for_python
+/output
