@@ -105,24 +105,37 @@ class Settings(QtWidgets.QWidget, settingsform.Ui_Form):
         event.accept()
 
     def clearKey(self):
-        self.d[self.item.text()] = ''
-        self.lineEdit.setText('')
-        self.saveKeys()
+        try:
+            self.d[self.item.text()] = ''
+            self.lineEdit.setText('')
+            self.saveKeys()
+        except:
+            QtWidgets.QMessageBox.warning(
+                self, 'Error', 'Choose nickname')
 
     def laodList(self):
         for nick in self.d:
             self.listWidget.addItem(nick)
 
     def saveK(self):
-        self.d[self.item.text()] = vignere.encrypt(self.lineEdit.text(), pas)
-        self.saveKeys()
+        try:
+            self.d[self.item.text()] = vignere.encrypt(
+                self.lineEdit.text(), pas)
+            self.saveKeys()
+        except:
+            QtWidgets.QMessageBox.warning(
+                self, 'Error', 'Choose nickname')
 
     def generateKey(self):
         key = get_random_bytes(32)
-        self.lineEdit.setText(b64encode(key).decode())
 
-        self.d[self.item.text()] = vignere.encrypt(
-            b64encode(key).decode(), pas)
+        try:
+            self.d[self.item.text()] = vignere.encrypt(
+                b64encode(key).decode(), pas)
+            self.lineEdit.setText(b64encode(key).decode())
+        except:
+            QtWidgets.QMessageBox.warning(
+                self, 'Error', 'Choose nickname')
 
     def setItem(self, item):
         self.item = item
@@ -136,9 +149,9 @@ class Settings(QtWidgets.QWidget, settingsform.Ui_Form):
                 and (hashlib.md5(t.encode()).hexdigest() == f.readline())
                 and (self.listWidget.count() != 0)
             ):
-                self.listWidget.takeItem(
-                    self.listWidget.indexFromItem(self.item).row())
                 try:
+                    self.listWidget.takeItem(
+                        self.listWidget.indexFromItem(self.item).row())
                     del self.d[self.item.text()]
                 except:
                     QtWidgets.QMessageBox.warning(
@@ -146,6 +159,9 @@ class Settings(QtWidgets.QWidget, settingsform.Ui_Form):
 
                 self.saveKeys()
                 self.lineEdit.setText("")
+            else:
+                QtWidgets.QMessageBox.warning(
+                    self, 'Error', 'Incorrect password')
             f.close()
 
     def addNick(self):
