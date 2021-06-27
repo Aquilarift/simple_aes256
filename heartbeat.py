@@ -42,15 +42,15 @@ class HeartBeat(QtWidgets.QMainWindow, mainwindow.Ui_MainWindow):
     def decrypt(self):
         key = b64decode(vignere.decrypt(
             self.settings.d[self.comboBox.currentText()], pas))
-        crtext = b64decode(self.textEdit.toPlainText())
-        iv = crtext[:16]
-
-        cipher = AES.new(key, AES.MODE_CBC, iv)
         try:
+            crtext = b64decode(self.textEdit.toPlainText())
+            iv = crtext[:16]
+
+            cipher = AES.new(key, AES.MODE_CBC, iv)
             text = unpad(cipher.decrypt(crtext[16:]), AES.block_size)
             self.textEdit.setText(text.decode())
         except:
-            QtWidgets.QMessageBox.warning(self, 'Error', 'No text')
+            QtWidgets.QMessageBox.warning(self, 'Error', 'Incorrect text')
 
     def encrypt(self):
         key = b64decode(vignere.decrypt(
