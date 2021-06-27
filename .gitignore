@@ -31,6 +31,8 @@ Makefile*
 *build-*
 *.qm
 *.prl
+*.ui 
+*.pyproject
 
 # Qt unit tests
 target_wrapper.*
@@ -53,3 +55,7 @@ compile_commands.json
 
 #Icons
 *.ico
+
+#Python
+__pycache__
+.qt_for_python
