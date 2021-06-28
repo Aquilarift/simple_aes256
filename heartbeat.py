@@ -205,7 +205,7 @@ class ChangePass(QtWidgets.QDialog, passchangedialog.Ui_Dialog):
     def baccept(self):
         # VIGNERE NICK
         with open('data.dat', 'r+') as f:
-            if (hashlib.md5(self.lineEdit.text().encode()).hexdigest() == f.readline()):
+            if (hashlib.md5(self.lineEdit.text().encode()).hexdigest() == f.readline()) and ((self.lineEdit.text() or self.lineEdit_2.text()) != ''):
                 global pas
                 old_pas = pas
                 pas = self.lineEdit_2.text()
