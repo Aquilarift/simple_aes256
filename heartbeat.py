@@ -83,11 +83,7 @@ class Settings(QtWidgets.QWidget, settingsform.Ui_Form):
         self.setupUi(self)
 
         self.setWindowModality(QtCore.Qt.WindowModality.ApplicationModal)
-
-        with open('data.json', 'r') as f:
-            self.d = json.load(f)
-            f.close()
-        self.laodList()
+        self.loadD()
 
         self.checkBox.stateChanged.connect(self.showPassword)
         self.exitButton.clicked.connect(self.saveAndExit)
@@ -98,6 +94,17 @@ class Settings(QtWidgets.QWidget, settingsform.Ui_Form):
         self.generateButton.clicked.connect(self.generateKey)
         self.saveButton.clicked.connect(self.saveK)
         self.clearButton.clicked.connect(self.clearKey)
+
+    def loadD(self):
+        try:
+            with open('data.json', 'r') as f:
+                self.d = json.load(f)
+                f.close()
+            self.laodList()
+        except:
+            with open('data.json', 'w') as f:
+                f.write('{}')
+                f.close()
 
     def closeEvent(self, event):
         window.comboBox.clear()
@@ -222,6 +229,7 @@ class ChangePass(QtWidgets.QDialog, passchangedialog.Ui_Dialog):
                             vignere.decrypt(d[nick], old_pas), pas)
                     json.dump(d, jf, ensure_ascii=False, indent=4)
                     jf.close()
+                window.settings.d = d
                 self.accept()
 
 
