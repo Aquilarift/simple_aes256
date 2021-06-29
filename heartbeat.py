@@ -57,8 +57,9 @@ class HeartBeat(QtWidgets.QMainWindow, mainwindow.Ui_MainWindow):
                 text = aescrypt.AESCrypt.decrypt(text, key)
 
             self.textEdit.setText(text.decode())
-        except:
-            QtWidgets.QMessageBox.warning(self, 'Error', 'Incorrect text')
+        except Exception as e:
+            QtWidgets.QMessageBox.warning(
+                self, 'Error', 'Incorrect text.\n' + str(e))
 
     def encrypt(self):
         count = self.spinBox.value()
@@ -131,9 +132,9 @@ class Settings(QtWidgets.QWidget, settingsform.Ui_Form):
             self.d[self.item.text()] = ''
             self.lineEdit.setText('')
             self.saveKeys()
-        except:
+        except Exception as e:
             QtWidgets.QMessageBox.warning(
-                self, 'Error', 'Choose nickname')
+                self, 'Error', 'Choose nickname.\n' + str(e))
 
     def laodList(self):
         for nick in self.d:
@@ -144,9 +145,9 @@ class Settings(QtWidgets.QWidget, settingsform.Ui_Form):
             self.d[self.item.text()] = vignere.encrypt(
                 self.lineEdit.text(), pas)
             self.saveKeys()
-        except:
+        except Exception as e:
             QtWidgets.QMessageBox.warning(
-                self, 'Error', 'Choose nickname')
+                self, 'Error', 'Choose nickname. \n' + str(e))
 
     def generateKey(self):
         key = get_random_bytes(32)
@@ -155,9 +156,9 @@ class Settings(QtWidgets.QWidget, settingsform.Ui_Form):
             self.d[self.item.text()] = vignere.encrypt(
                 b64encode(key).decode(), pas)
             self.lineEdit.setText(b64encode(key).decode())
-        except:
+        except Exception as e:
             QtWidgets.QMessageBox.warning(
-                self, 'Error', 'Choose nickname')
+                self, 'Error', 'Choose nickname.\n' + str(e))
 
     def setItem(self, item):
         self.item = item
@@ -175,9 +176,9 @@ class Settings(QtWidgets.QWidget, settingsform.Ui_Form):
                     self.listWidget.takeItem(
                         self.listWidget.indexFromItem(self.item).row())
                     del self.d[self.item.text()]
-                except:
+                except Exception as e:
                     QtWidgets.QMessageBox.warning(
-                        self, 'Error', 'Choose nickname')
+                        self, 'Error', 'Choose nickname.\n' + str(e))
 
                 self.saveKeys()
                 self.lineEdit.setText("")
