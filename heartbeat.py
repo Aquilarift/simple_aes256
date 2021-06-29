@@ -19,6 +19,7 @@ import signdialog
 import settingsform
 import passchangedialog
 import vignere
+import aescrypt
 
 
 class HeartBeat(QtWidgets.QMainWindow, mainwindow.Ui_MainWindow):
@@ -31,6 +32,7 @@ class HeartBeat(QtWidgets.QMainWindow, mainwindow.Ui_MainWindow):
         self.login.show()
 
         self.comboBox.addItems([str(x) for x in self.settings.d])
+        self.spinBox.setValue(1)
 
         self.copyButton.clicked.connect(self.copyClick)
         self.pasteButton.clicked.connect(self.pasteClick)
@@ -40,26 +42,39 @@ class HeartBeat(QtWidgets.QMainWindow, mainwindow.Ui_MainWindow):
         self.decButton.clicked.connect(self.decrypt)
 
     def decrypt(self):
+        count = self.spinBox.value()
+        if (count == 0):
+            QtWidgets.QMessageBox.warning(
+                self, 'Error', 'Number cannot be zero')
+            return 1
+
         key = b64decode(vignere.decrypt(
             self.settings.d[self.comboBox.currentText()], pas))
         try:
-            crtext = b64decode(self.textEdit.toPlainText())
-            iv = crtext[:16]
+            text = b64decode(self.textEdit.toPlainText())
 
-            cipher = AES.new(key, AES.MODE_CBC, iv)
-            text = unpad(cipher.decrypt(crtext[16:]), AES.block_size)
+            for _ in range(count):
+                text = aescrypt.AESCrypt.decrypt(text, key)
+
             self.textEdit.setText(text.decode())
         except:
             QtWidgets.QMessageBox.warning(self, 'Error', 'Incorrect text')
 
     def encrypt(self):
+        count = self.spinBox.value()
+        if (count == 0):
+            QtWidgets.QMessageBox.warning(
+                self, 'Error', 'Number cannot be zero')
+            return 1
+
         key = b64decode(vignere.decrypt(
             self.settings.d[self.comboBox.currentText()], pas))
         text = self.textEdit.toPlainText().encode()
 
-        cipher = AES.new(key, AES.MODE_CBC)
-        crtext = cipher.encrypt(pad(text, AES.block_size))
-        self.textEdit.setText(b64encode(cipher.iv + crtext).decode())
+        for _ in range(count):
+            text = aescrypt.AESCrypt.encrypt(text, key)
+
+        self.textEdit.setText(b64encode(text).decode())
 
     def openSettings(self):
         self.settings.show()
